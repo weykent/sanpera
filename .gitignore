@@ -1,9 +1,13 @@
 .*.swp
 *.pyc
 *.so
+__pycache__
+/sanpera/_apiconfig.json
 
 MANIFEST
 /build
 /dist
+*.egg
+*.egg-info
 
 /doc/_build
