@@ -470,7 +470,7 @@ cdef class Image:
         cdef c_api.ImageInfo* image_info = c_api.CloneImageInfo(NULL)
         cdef MagickException exc = MagickException()
         cdef size_t length = 0
-        cdef void* cbuf = NULL
+        cdef unsigned char* cbuf = NULL
         cdef bytes buf
 
         try:
@@ -489,10 +489,10 @@ cdef class Image:
                 # Uhoh; no format provided and nothing given by caller
                 raise MissingFormatError
 
-            cbuf = c_api.ImageToBlob(image_info, self._stack, &length, exc.ptr)
+            cbuf = c_api.ImagesToBlob(image_info, self._stack, &length, exc.ptr)
             exc.check()
 
-            buf = (<unsigned char*> cbuf)[:length]
+            buf = cbuf[:length]
             c_api.RelinquishMagickMemory(cbuf)
             return buf
         finally:

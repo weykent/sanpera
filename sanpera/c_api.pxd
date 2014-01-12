@@ -928,6 +928,7 @@ cdef extern from "magick/magick.h":
 cdef extern from "magick/blob.h":
     Image* BlobToImage(ImageInfo* image_info, void* blob, size_t length, ExceptionInfo *exception)
     void* ImageToBlob(ImageInfo* image_info, Image* image, size_t* length, ExceptionInfo *exception)
+    unsigned char* ImagesToBlob(ImageInfo* image_info, Image* images, size_t* length, ExceptionInfo *exception)
 
 
 ### CONSTITUTE
