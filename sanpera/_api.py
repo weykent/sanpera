@@ -10,19 +10,6 @@ import sys
 import cffi
 
 
-################################################################################
-# FFI setup
-
-ffi = cffi.FFI()
-
-here = os.path.dirname(__file__)
-
-# For the sake of sanity and syntax highlighting, the C-ish parts are in
-# separate files with appropriate extensions.
-with open(os.path.join(here, '_api.h')) as f_headers:
-    ffi.cdef(f_headers.read())
-
-
 def check_output(*args, **kwargs):
     """Rough implementation of `subprocess.check_output`, which doesn't exist
     until 2.7.
@@ -81,6 +68,19 @@ def find_imagemagick_configuration():
         "If you're pretty sure you have it installed, please either install\n"
         "pkg-config or tell me how to find libraries on your platform."
     )
+
+
+################################################################################
+# FFI setup
+
+ffi = cffi.FFI()
+
+here = os.path.dirname(__file__)
+
+# For the sake of sanity and syntax highlighting, the C-ish parts are in
+# separate files with appropriate extensions.
+with open(os.path.join(here, '_api.h')) as f_headers:
+    ffi.cdef(f_headers.read())
 
 
 extension_kwargs = {}
