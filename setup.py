@@ -20,8 +20,8 @@ else:
             stdout=subprocess.PIPE)
     link_args, err = proc.communicate()
     extension_kwargs = dict(
-        extra_compile_args=shlex.split(compile_args),
-        extra_link_args=shlex.split(link_args),
+        extra_compile_args=shlex.split(compile_args.decode()),
+        extra_link_args=shlex.split(link_args.decode()),
     )
 
 # Add Cythonizing support for devs
@@ -59,7 +59,7 @@ def ext_module(module):
 
 setup(
     name='sanpera',
-    version='0.1.1.dev3',
+    version='0.1.1.dev4',
     description='Image manipulation library, powered by ImageMagick',
     author='Eevee',
     author_email='eevee.sanpera@veekun.com',
