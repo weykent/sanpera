@@ -165,7 +165,7 @@ class Size(Vector):
         vec = Vector.coerce(point)
         return Rectangle(vec.x, vec.y, vec.x + self.x, vec.y + self.y)
 
-    def fit_area(self, area, upscale=True, downscale=True, emulate=False):
+    def fit_area(self, area, upscale=True, downscale=True):
         """Scale this Size proportionally to have approximately the given
         number of pixels (but no more).
 
@@ -176,11 +176,10 @@ class Size(Vector):
         Set `upscale` or `downscale` to `False` to prevent resizing in either
         direction.
         """
-        # A note on ImageMagick's actual behavior:
-        # In 6.7.3, the width and height are merely truncated.
-        # In 6.7.6, the width and height are rounded.
-        # The "emulate" flag emulates the latter behavior, which violates the
-        # guarantee that the new size is no larger than the requested area.
+        # FYI: from between 6.7.3 and 6.7.6 until 6.8.6-5, ImageMagick rounded
+        # the width and height when calculating the @ flag rather than
+        # truncating them, which broke the promise that the new size is no
+        # larger than the requested area.
 
         if area <= 0:
             raise ValueError("Area to fit must be positive")
@@ -195,9 +194,6 @@ class Size(Vector):
 
         cls = type(self)
         ratio = math.sqrt(area / current_area)
-
-        if emulate:
-            return cls(int(self.x * ratio + 0.5), int(self.y * ratio + 0.5))
 
         approx_width = int(self.x * ratio)
         approx_height = int(self.y * ratio)
@@ -276,7 +272,9 @@ class Rectangle(namedtuple('_Rectangle', ['x1', 'y1', 'x2', 'y2'])):
 
     ### Construction
 
-    def __init__(self, x1, y1, x2, y2):
+    # Have to use __new__ here since a `tuple` needs to know its size before
+    # being created.  Not sure why __init__ works on py2, but it doesn't on 3
+    def __new__(cls, x1, y1, x2, y2):
         """Create a rectangle using the coordinates of its sides."""
         # Fix up coordinate order if necessary
         if x1 > x2:
@@ -284,7 +282,7 @@ class Rectangle(namedtuple('_Rectangle', ['x1', 'y1', 'x2', 'y2'])):
         if y1 > y2:
             y1, y2 = y2, y1
 
-        super(Rectangle, self).__init__(x1, y1, x2, y2)
+        return super(Rectangle, cls).__new__(cls, x1, y1, x2, y2)
 
     def at(self, point):
         return self.size.at(point)
@@ -319,8 +317,10 @@ class Rectangle(namedtuple('_Rectangle', ['x1', 'y1', 'x2', 'y2'])):
             x1=self.x1, y1=self.y1,
             x2=self.x2, y2=self.y2)
 
-    def __nonzero__(self):
+    def __bool__(self):
         return self.x1 != self.x2 and self.y1 != self.y2
+
+    __nonzero__ = __bool__
 
     def __add__(self, other):
         cls = type(self)

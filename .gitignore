@@ -3,6 +3,9 @@
 *.so
 __pycache__
 
+.directory
+.ropeproject
+
 MANIFEST
 /build
 /dist

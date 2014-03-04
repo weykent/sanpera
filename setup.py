@@ -1,4 +1,5 @@
 import os
+import sys
 
 from setuptools import setup
 from setuptools.dist import Distribution
@@ -13,6 +14,10 @@ os.environ['SANPERA_BUILD'] = 'yes'
 
 from sanpera._api import ffi
 
+# Depend on backported libraries only if they don't already exist in the stdlib
+BACKPORTS = []
+if sys.version_info < (3, 4):
+    BACKPORTS.append('enum34')
 
 setup(
     name='sanpera',
@@ -35,7 +40,7 @@ setup(
     package_data={
         'sanpera': ['_api.c', '_api.h'],
     },
-    install_requires=[
+    install_requires=BACKPORTS + [
         'cffi',
     ],
 
