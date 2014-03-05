@@ -27,6 +27,16 @@ def find_imagemagick_configuration():
     """Find out where ImageMagick is and how it was built.  Return a dict of
     distutils extension-building arguments.
     """
+
+    # Easiest way: the user is telling us what to use.
+    env_cflags = os.environ.get('SANPERA_IMAGEMAGICK_CFLAGS')
+    env_ldflags = os.environ.get('SANPERA_IMAGEMAGICK_LDFLAGS')
+    if env_cflags is not None or env_ldflags is not None:
+        return dict(
+            extra_compile_args=env_cflags or '',
+            extra_link_args=env_ldflags or '',
+        )
+
     # Easy way: pkg-config, part of freedesktop
     # Note that ImageMagick ships with its own similar program `Magick-config`,
     # but it's just a tiny wrapper around `pkg-config`, so why it even exists
@@ -72,10 +82,17 @@ here = os.path.dirname(__file__)
 with open(os.path.join(here, '_api.h')) as f_headers:
     ffi.cdef(f_headers.read())
 
-extension_kwargs = find_imagemagick_configuration()
+
+extension_kwargs = {}
+if os.environ.get('SANPERA_BUILD', '').lower().startswith('y'):
+    extension_kwargs = find_imagemagick_configuration()
+
+
 with open(os.path.join(here, '_api.c')) as f_stub:
     lib = ffi.verify(
         f_stub.read(),
+        ext_package='sanpera',
+        modulename='_api_bridge',
         **extension_kwargs)
 
 # ImageMagick initialization
