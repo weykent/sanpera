@@ -21,7 +21,7 @@ if sys.version_info < (3, 4):
 
 setup(
     name='sanpera',
-    version='0.2.dev5',
+    version='0.2.dev6',
     description='Image manipulation library, powered by ImageMagick',
     author='Eevee',
     author_email='eevee.sanpera@veekun.com',
