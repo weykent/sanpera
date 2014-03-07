@@ -981,7 +981,7 @@ typedef enum {
     RepeatSpread
 } SpreadMethod;
 
-typedef struct { 
+typedef struct {
     double x;
     double y;
 } PointInfo;
@@ -1175,6 +1175,14 @@ Image *ReadImages(const ImageInfo *, ExceptionInfo *);
 Image *ReadInlineImage(const ImageInfo *, const char *, ExceptionInfo *);
 MagickBooleanType WriteImage(const ImageInfo *, Image *);
 MagickBooleanType WriteImages(const ImageInfo *, Image *, const char *, ExceptionInfo *);
+
+
+// -----------------------------------------------------------------------------
+// layer.h
+
+Image *CoalesceImages(Image *, ExceptionInfo *);
+Image *OptimizeImageLayers(Image *, ExceptionInfo *);
+void OptimizeImageTransparency(Image *, ExceptionInfo *);
 
 
 // =============================================================================
