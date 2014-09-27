@@ -92,7 +92,10 @@ cdef check_magick_exception(c_api.ExceptionInfo* exc, int force = 0):
     else:
         message = exc.reason
 
-    message = message + '   ' + str(<int>exc.severity) + '   ' + str(<int>exc.error_number)
+    message = (
+        message
+        + b'   ' + str(<int>exc.severity).encode()
+        + b'   ' + str(<int>exc.error_number).encode())
 
     if exc.severity < c_api.ErrorException:
         # This is a warning, so do a warning
