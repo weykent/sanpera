@@ -59,7 +59,7 @@ def ext_module(module):
 
 setup(
     name='sanpera',
-    version='0.1.1-6',
+    version='0.1.1+weasyl-6',
     description='Image manipulation library, powered by ImageMagick',
     author='Eevee',
     author_email='eevee.sanpera@veekun.com',
